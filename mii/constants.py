@@ -18,6 +18,7 @@ class Tasks(enum.Enum):
     TOKEN_CLASSIFICATION = 5
     CONVERSATIONAL = 6
     TEXT2IMG = 7
+    TEXT2MESH = 8
 
 
 TEXT_GENERATION_NAME = 'text-generation'
@@ -27,7 +28,7 @@ FILL_MASK_NAME = 'fill-mask'
 TOKEN_CLASSIFICATION_NAME = 'token-classification'
 CONVERSATIONAL_NAME = 'conversational'
 TEXT2IMG_NAME = "text-to-image"
-
+TEXT2MESH_NAME = "text-to-mesh"
 
 class ModelProvider(enum.Enum):
     HUGGING_FACE = 1
@@ -67,7 +68,8 @@ SUPPORTED_TASKS = [
     FILL_MASK_NAME,
     TOKEN_CLASSIFICATION_NAME,
     CONVERSATIONAL_NAME,
-    TEXT2IMG_NAME
+    TEXT2IMG_NAME,
+    TEXT2MESH_NAME
 ]
 
 REQUIRED_KEYS_PER_TASK = {
@@ -82,7 +84,8 @@ REQUIRED_KEYS_PER_TASK = {
      'conversation_id',
      'past_user_inputs',
      'generated_responses'],
-    TEXT2IMG_NAME: ["query"]
+    TEXT2IMG_NAME: ["query"],
+    TEXT2MESH_NAME: ["query"]
 }
 
 MODEL_NAME_KEY = 'model_name'

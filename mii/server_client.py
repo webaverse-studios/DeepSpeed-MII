@@ -186,6 +186,10 @@ class MIIServerClient():
                 provider = mii.constants.MODEL_PROVIDER_NAME_HF_LLM
             elif self.task == mii.Tasks.TEXT2IMG:
                 provider = mii.constants.MODEL_PROVIDER_NAME_DIFFUSERS
+            elif self.task == mii.Tasks.TEXT2MESH:
+                # TODO: make sure we want diffusers!
+                print('WARNING: using diffusers for text2mesh')
+                provider = mii.constants.MODEL_PROVIDER_NAME_DIFFUSERS
             else:
                 provider = mii.constants.MODEL_PROVIDER_NAME_HF
             server_args_str += f" --provider {provider}"
@@ -304,6 +308,16 @@ class MIIServerClient():
                                                        query_kwargs=proto_kwargs)
             response = await self.stubs[stub_id].Txt2ImgReply(req)
 
+        elif self.task == mii.Tasks.TEXT2MESH:
+            print("TODO: text2mesh task copied from txt2img, verify this works")
+            # convert to batch of queries if they are not already
+            if not isinstance(request_dict['query'], list):
+                request_dict['query'] = [request_dict['query']]
+            req = modelresponse_pb2.MultiStringRequest(request=request_dict['query'],
+                                                       query_kwargs=proto_kwargs)
+            response = await self.stubs[stub_id].Txt2MeshReply(req)
+
+
         else:
             raise ValueError(f"unknown task: {self.task}")
         return response
@@ -331,6 +345,9 @@ class MIIServerClient():
             response = self.model(["", request_dict['query']], **query_kwargs)
 
         elif self.task == mii.Tasks.TEXT2IMG:
+            response = self.model(request_dict['query'], **query_kwargs)
+
+        elif self.task == mii.Tasks.TEXT2MESH:
             response = self.model(request_dict['query'], **query_kwargs)
 
         else:

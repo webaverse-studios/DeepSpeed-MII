@@ -29,6 +29,7 @@ service ModelResponse {
   rpc TokenClassificationReply(SingleStringRequest) returns (SingleStringReply) {}
   rpc ConversationalReply(ConversationRequest) returns (ConversationReply) {}
   rpc Txt2ImgReply(MultiStringRequest) returns (ImageReply) {}
+  rpc Txt2MeshReply(MultiStringRequest) returns (ImageReply) {}
 }
 
 message Value {

@@ -96,6 +96,38 @@ class ModelResponse(modelresponse_pb2_grpc.ModelResponseServicer):
                                            time_taken=end - start)
         return val
 
+    def Txt2MeshReply(self, request, context):
+        # TODO: Insert stable dreamfusion code here
+        print('Txt2MeshReply')
+        query_kwargs = self._unpack_proto_query_kwargs(request.query_kwargs)
+
+        # unpack grpc list into py-list
+        request = [r for r in request.request]
+
+        start = time.time()
+        response = self.inference_pipeline(request, **query_kwargs)
+        end = time.time()
+
+        images_bytes = []
+        nsfw_content_detected = []
+        response_count = len(response.images)
+        for i in range(response_count):
+            img = response.images[i]
+            img_bytes = img.tobytes()
+            images_bytes.append(img_bytes)
+            nsfw_content_detected.append(response.nsfw_content_detected[i])
+        img_mode = response.images[0].mode
+        img_size_w, img_size_h = response.images[0].size
+
+        val = modelresponse_pb2.ImageReply(images=images_bytes,
+                                           nsfw_content_detected=nsfw_content_detected,
+                                           mode=img_mode,
+                                           size_w=img_size_w,
+                                           size_h=img_size_h,
+                                           time_taken=end - start)
+        return val
+
+
     def ClassificationReply(self, request, context):
         query_kwargs = self._unpack_proto_query_kwargs(request.query_kwargs)
         start = time.time()
